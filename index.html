@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,7 +10,9 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title>College of Engineering Attendance Scanner</title>
+  <title>
+    College of Engineering | Attendance Scanner
+  </title>
 
 
   <!-- QR SCANNER LIBRARY -->
@@ -20,9 +21,56 @@
 
   <style>
 
+    /* =================================================
+       GLOBAL
+       ================================================= */
+
     * {
       box-sizing: border-box;
     }
+
+
+    :root {
+
+      --navy: #0b1f3a;
+
+      --blue: #1557a6;
+
+      --blue-light: #eaf2ff;
+
+      --blue-hover: #0e4384;
+
+      --text: #172033;
+
+      --muted: #687386;
+
+      --border: #dce3ec;
+
+      --background: #eef2f7;
+
+      --white: #ffffff;
+
+      --success: #16834b;
+
+      --success-bg: #e9f8f0;
+
+      --warning: #a66b00;
+
+      --warning-bg: #fff6df;
+
+      --danger: #c0392b;
+
+      --danger-bg: #fff0ee;
+
+      --shadow:
+        0 15px 45px rgba(11, 31, 58, 0.12);
+    }
+
+
+    html {
+      scroll-behavior: smooth;
+    }
+
 
     body {
 
@@ -31,12 +79,20 @@
       min-height: 100vh;
 
       font-family:
+        Inter,
         Arial,
         Helvetica,
         sans-serif;
 
       background:
-        #f3f3f3;
+        linear-gradient(
+          135deg,
+          #eef2f7 0%,
+          #f7f9fc 50%,
+          #e9eef5 100%
+        );
+
+      color: var(--text);
 
       display: flex;
 
@@ -44,53 +100,314 @@
 
       align-items: flex-start;
 
-      padding: 25px 15px;
+      padding:
+        30px 16px 40px;
     }
 
+
+    /* =================================================
+       MAIN CONTAINER
+       ================================================= */
 
     .container {
 
       width: 100%;
 
-      max-width: 600px;
+      max-width: 680px;
 
-      background: white;
+      background:
+        var(--white);
 
-      border-radius: 25px;
+      border-radius: 24px;
 
-      padding: 30px 25px;
+      overflow: hidden;
 
       box-shadow:
-        0 10px 30px
-        rgba(0,0,0,0.12);
+        var(--shadow);
+
+      border:
+        1px solid rgba(11, 31, 58, 0.05);
     }
 
 
-    .header {
+    /* =================================================
+       TOP BRAND HEADER
+       ================================================= */
+
+    .top-header {
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--navy),
+          #123e72
+        );
+
+      color: white;
+
+      padding:
+        28px 25px 30px;
 
       text-align: center;
 
-      margin-bottom: 25px;
+      position: relative;
+
+      overflow: hidden;
     }
 
 
-    .header h1 {
+    .top-header::before {
+
+      content: "";
+
+      position: absolute;
+
+      width: 180px;
+
+      height: 180px;
+
+      border-radius: 50%;
+
+      border:
+        1px solid
+        rgba(255,255,255,0.08);
+
+      top: -90px;
+
+      right: -50px;
+    }
+
+
+    .top-header::after {
+
+      content: "";
+
+      position: absolute;
+
+      width: 130px;
+
+      height: 130px;
+
+      border-radius: 50%;
+
+      border:
+        1px solid
+        rgba(255,255,255,0.06);
+
+      bottom: -70px;
+
+      left: -40px;
+    }
+
+
+    .brand {
+
+      position: relative;
+
+      z-index: 2;
+    }
+
+
+    .brand-title {
 
       margin: 0;
 
-      font-size: 32px;
+      font-size: 14px;
 
-      color: #111;
+      font-weight: 700;
+
+      letter-spacing: 2px;
+
+      text-transform: uppercase;
+
+      opacity: 0.85;
     }
 
 
-    .header p {
+    .event-title {
 
-      margin-top: 10px;
+      margin:
+        8px 0 0;
 
-      font-size: 17px;
+      font-size: 26px;
 
-      color: #666;
+      line-height: 1.2;
+
+      font-weight: 800;
+    }
+
+
+    .event-subtitle {
+
+      margin:
+        8px 0 0;
+
+      font-size: 14px;
+
+      line-height: 1.5;
+
+      opacity: 0.82;
+    }
+
+
+    /* =================================================
+       CONTENT
+       ================================================= */
+
+    .content {
+
+      padding:
+        28px 25px 30px;
+    }
+
+
+    /* =================================================
+       SCANNER HEADER
+       ================================================= */
+
+    .scanner-heading {
+
+      text-align: center;
+
+      margin-bottom: 20px;
+    }
+
+
+    .scanner-heading h1 {
+
+      margin: 0;
+
+      font-size: 24px;
+
+      font-weight: 800;
+
+      color: var(--navy);
+    }
+
+
+    .scanner-heading p {
+
+      margin:
+        7px 0 0;
+
+      font-size: 14px;
+
+      color: var(--muted);
+
+      line-height: 1.5;
+    }
+
+
+    /* =================================================
+       CONNECTION STATUS
+       ================================================= */
+
+    .connection {
+
+      display: flex;
+
+      justify-content: center;
+
+      align-items: center;
+
+      gap: 8px;
+
+      margin:
+        0 auto 22px;
+
+      width: fit-content;
+
+      padding:
+        7px 13px;
+
+      border-radius: 50px;
+
+      background:
+        #f1f4f8;
+
+      color:
+        var(--muted);
+
+      font-size: 12px;
+
+      font-weight: 600;
+
+      transition:
+        0.25s ease;
+    }
+
+
+    .connection-dot {
+
+      width: 8px;
+
+      height: 8px;
+
+      border-radius: 50%;
+
+      background:
+        #9aa4b2;
+    }
+
+
+    .connection.connected {
+
+      background:
+        var(--success-bg);
+
+      color:
+        var(--success);
+    }
+
+
+    .connection.connected .connection-dot {
+
+      background:
+        var(--success);
+
+      box-shadow:
+        0 0 0 4px
+        rgba(22,131,75,0.10);
+    }
+
+
+    .connection.disconnected {
+
+      background:
+        var(--danger-bg);
+
+      color:
+        var(--danger);
+    }
+
+
+    .connection.disconnected .connection-dot {
+
+      background:
+        var(--danger);
+    }
+
+
+    /* =================================================
+       CAMERA AREA
+       ================================================= */
+
+    .scanner-wrapper {
+
+      background:
+        #101820;
+
+      border-radius: 20px;
+
+      padding: 10px;
+
+      box-shadow:
+        inset 0 0 0 1px
+        rgba(255,255,255,0.04);
+
+      position: relative;
+
+      overflow: hidden;
     }
 
 
@@ -98,31 +415,135 @@
 
       width: 100%;
 
-      max-width: 500px;
+      max-width: 560px;
 
       margin: 0 auto;
 
-      border-radius: 15px;
+      border-radius: 14px;
 
       overflow: hidden;
     }
 
 
+    /*
+     * Make html5-qrcode elements cleaner
+     */
+
+    #reader video {
+
+      border-radius: 14px !important;
+
+      object-fit: cover !important;
+    }
+
+
+    #reader__scan_region {
+
+      border-radius: 14px !important;
+
+      overflow: hidden;
+    }
+
+
+    #reader__dashboard {
+
+      background:
+        #101820 !important;
+
+      color: white !important;
+
+      border: none !important;
+
+      padding:
+        8px !important;
+    }
+
+
+    #reader__dashboard_section {
+
+      color: white !important;
+    }
+
+
+    #reader__dashboard_section_csr {
+
+      color: white !important;
+    }
+
+
+    #reader__dashboard_section_swaplink {
+
+      color:
+        #8db8ef !important;
+    }
+
+
+    #reader__dashboard_section_csr button {
+
+      background:
+        var(--blue) !important;
+
+      color: white !important;
+
+      border: none !important;
+
+      border-radius: 8px !important;
+
+      padding:
+        9px 14px !important;
+
+      font-weight: 600 !important;
+    }
+
+
+    /* =================================================
+       SCAN INSTRUCTION
+       ================================================= */
+
+    .scan-hint {
+
+      text-align: center;
+
+      margin:
+        15px 0 0;
+
+      font-size: 12px;
+
+      color: var(--muted);
+    }
+
+
+    .scan-hint strong {
+
+      color: var(--text);
+    }
+
+
+    /* =================================================
+       STATUS MESSAGE
+       ================================================= */
+
     .status {
 
       margin-top: 20px;
 
-      padding: 18px;
+      padding:
+        16px 18px;
 
-      border-radius: 15px;
+      border-radius: 14px;
 
       text-align: center;
 
-      font-size: 17px;
+      font-size: 15px;
 
-      font-weight: bold;
+      font-weight: 700;
+
+      line-height: 1.4;
 
       display: none;
+
+      border:
+        1px solid transparent;
     }
 
 
@@ -130,9 +551,14 @@
 
       display: block;
 
-      background: #dff6e5;
+      background:
+        var(--success-bg);
 
-      color: #146c2e;
+      color:
+        var(--success);
+
+      border-color:
+        #c8ecd9;
     }
 
 
@@ -140,9 +566,14 @@
 
       display: block;
 
-      background: #ffe0e0;
+      background:
+        var(--danger-bg);
 
-      color: #a40000;
+      color:
+        var(--danger);
+
+      border-color:
+        #f2cbc6;
     }
 
 
@@ -150,41 +581,216 @@
 
       display: block;
 
-      background: #fff1cc;
+      background:
+        var(--warning-bg);
 
-      color: #805b00;
+      color:
+        var(--warning);
+
+      border-color:
+        #f0dfb2;
     }
 
+
+    /* =================================================
+       PARTICIPANT CARD
+       ================================================= */
 
     .participant {
 
-      margin-top: 15px;
+      margin-top: 18px;
 
-      padding: 20px;
+      padding: 22px;
 
-      background: #f7f7f7;
+      background:
+        #f8fafc;
 
-      border-radius: 15px;
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 16px;
 
       display: none;
+
+      animation:
+        slideUp 0.3s ease;
     }
 
 
-    .participant h2 {
+    @keyframes slideUp {
 
-      margin-top: 0;
+      from {
 
-      font-size: 22px;
+        opacity: 0;
+
+        transform:
+          translateY(8px);
+      }
+
+      to {
+
+        opacity: 1;
+
+        transform:
+          translateY(0);
+      }
     }
 
 
-    .participant p {
+    .participant-header {
 
-      margin: 8px 0;
+      display: flex;
 
-      font-size: 16px;
+      justify-content: space-between;
+
+      align-items: center;
+
+      gap: 10px;
+
+      margin-bottom: 18px;
+
+      padding-bottom: 14px;
+
+      border-bottom:
+        1px solid
+        var(--border);
     }
 
+
+    .participant-header h2 {
+
+      margin: 0;
+
+      font-size: 18px;
+
+      color: var(--navy);
+    }
+
+
+    .verified {
+
+      font-size: 11px;
+
+      font-weight: 700;
+
+      padding:
+        5px 9px;
+
+      border-radius: 50px;
+
+      background:
+        var(--success-bg);
+
+      color:
+        var(--success);
+
+      text-transform:
+        uppercase;
+
+      letter-spacing:
+        0.5px;
+    }
+
+
+    .participant-grid {
+
+      display: grid;
+
+      grid-template-columns:
+        1fr 1fr;
+
+      gap:
+        12px;
+    }
+
+
+    .info-item {
+
+      background:
+        white;
+
+      padding:
+        12px 13px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 10px;
+
+      min-width: 0;
+    }
+
+
+    .info-item.full {
+
+      grid-column:
+        1 / -1;
+    }
+
+
+    .info-label {
+
+      display: block;
+
+      font-size: 10px;
+
+      font-weight: 700;
+
+      color: var(--muted);
+
+      text-transform:
+        uppercase;
+
+      letter-spacing:
+        0.7px;
+
+      margin-bottom: 5px;
+    }
+
+
+    .info-value {
+
+      display: block;
+
+      font-size: 14px;
+
+      font-weight: 700;
+
+      color: var(--text);
+
+      word-break: break-word;
+    }
+
+
+    /* =================================================
+       RETRY BUTTON
+       ================================================= */
+
+    .retry {
+
+      display: none;
+
+      margin-top: 15px;
+
+      background:
+        var(--blue);
+
+      color: white;
+    }
+
+
+    .retry:hover {
+
+      background:
+        var(--blue-hover);
+    }
+
+
+    /* =================================================
+       MANUAL ENTRY
+       ================================================= */
 
     .manual {
 
@@ -193,23 +799,45 @@
       padding-top: 25px;
 
       border-top:
-        1px solid #ddd;
+        1px solid
+        var(--border);
 
       text-align: center;
     }
 
 
-    .manual h2 {
+    .manual-title {
 
-      margin-bottom: 10px;
+      margin: 0;
+
+      font-size: 18px;
+
+      color: var(--navy);
+
+      font-weight: 800;
     }
 
 
-    .manual p {
+    .manual-description {
 
-      color: #666;
+      margin:
+        7px auto 17px;
 
-      margin-bottom: 15px;
+      max-width: 470px;
+
+      color: var(--muted);
+
+      font-size: 13px;
+
+      line-height: 1.5;
+    }
+
+
+    .input-wrapper {
+
+      position: relative;
+
+      width: 100%;
     }
 
 
@@ -217,76 +845,260 @@
 
       width: 100%;
 
-      padding: 16px;
+      padding:
+        15px 16px;
 
-      font-size: 18px;
+      font-size: 17px;
+
+      font-weight: 600;
 
       border:
-        1px solid #ccc;
+        1px solid
+        var(--border);
 
-      border-radius: 12px;
+      border-radius: 11px;
 
       text-align: center;
 
       text-transform: uppercase;
 
       outline: none;
+
+      color: var(--text);
+
+      background:
+        #fbfcfe;
+
+      transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
+    }
+
+
+    input::placeholder {
+
+      color:
+        #a2aab5;
+
+      font-weight:
+        400;
     }
 
 
     input:focus {
 
-      border-color: #555;
+      border-color:
+        var(--blue);
+
+      background:
+        white;
+
+      box-shadow:
+        0 0 0 3px
+        rgba(21,87,166,0.10);
     }
 
+
+    /* =================================================
+       BUTTONS
+       ================================================= */
 
     button {
 
       width: 100%;
 
-      margin-top: 12px;
+      margin-top: 11px;
 
-      padding: 16px;
+      padding:
+        15px 18px;
 
       border: none;
 
-      border-radius: 12px;
+      border-radius: 11px;
 
-      background: #222;
+      background:
+        var(--blue);
 
       color: white;
 
-      font-size: 18px;
+      font-size: 15px;
 
-      font-weight: bold;
+      font-weight: 800;
+
+      letter-spacing:
+        0.3px;
 
       cursor: pointer;
+
+      transition:
+        background 0.2s,
+        transform 0.1s,
+        box-shadow 0.2s;
+    }
+
+
+    button:hover {
+
+      background:
+        var(--blue-hover);
+
+      box-shadow:
+        0 5px 14px
+        rgba(21,87,166,0.20);
     }
 
 
     button:active {
 
-      transform: scale(0.98);
+      transform:
+        scale(0.985);
+
+      box-shadow:
+        none;
     }
 
 
-    .retry {
+    button:disabled {
 
-      display: none;
+      opacity: 0.55;
 
-      background: #555;
+      cursor: not-allowed;
+
+      box-shadow: none;
     }
 
 
-    .connection {
+    /* =================================================
+       FOOTER
+       ================================================= */
 
-      margin-top: 20px;
+    .footer {
+
+      margin-top: 28px;
+
+      padding-top: 18px;
+
+      border-top:
+        1px solid
+        var(--border);
 
       text-align: center;
 
-      font-size: 13px;
+      color:
+        #8a94a3;
 
-      color: #888;
+      font-size: 11px;
+
+      line-height: 1.5;
+    }
+
+
+    .footer strong {
+
+      color:
+        #667181;
+    }
+
+
+    /* =================================================
+       RESPONSIVE
+       ================================================= */
+
+    @media (max-width: 600px) {
+
+      body {
+
+        padding:
+          0 0 25px;
+
+        background:
+          #f7f9fc;
+      }
+
+
+      .container {
+
+        max-width: 100%;
+
+        border-radius: 0;
+
+        box-shadow: none;
+
+        border: none;
+      }
+
+
+      .top-header {
+
+        border-radius: 0;
+
+        padding:
+          24px 20px 26px;
+      }
+
+
+      .event-title {
+
+        font-size: 23px;
+      }
+
+
+      .content {
+
+        padding:
+          24px 17px 28px;
+      }
+
+
+      .scanner-heading h1 {
+
+        font-size: 22px;
+      }
+
+
+      .participant-grid {
+
+        grid-template-columns:
+          1fr;
+      }
+
+
+      .info-item.full {
+
+        grid-column:
+          auto;
+      }
+
+
+      .scanner-wrapper {
+
+        border-radius: 16px;
+
+        padding: 7px;
+      }
+    }
+
+
+    @media (max-width: 380px) {
+
+      .event-title {
+
+        font-size: 21px;
+      }
+
+
+      .content {
+
+        padding-left: 13px;
+
+        padding-right: 13px;
+      }
+
+
+      .participant {
+
+        padding: 17px;
+      }
     }
 
   </style>
@@ -300,124 +1112,286 @@
   <div class="container">
 
 
-    <div class="header">
+    <!-- =================================================
+         EVENT HEADER
+         ================================================= -->
 
-      <h1>
-        📱 Attendance Scanner
-      </h1>
+    <div class="top-header">
 
-      <p>
-        College of Engineering
-      </p>
+      <div class="brand">
 
-      <p>
-        Point the camera at the participant's QR code.
-      </p>
+        <p class="brand-title">
+          University of Batangas
+        </p>
 
-    </div>
+        <h1 class="event-title">
+          College of Engineering
+        </h1>
 
+        <p class="event-subtitle">
+          2026 General Assembly
+          <br>
+          Founding Innovation: 49 Years of Excellence
+        </p>
 
-    <!-- CAMERA SCANNER -->
-
-    <div id="reader"></div>
-
-
-    <!-- STATUS -->
-
-    <div
-      id="status"
-      class="status"
-    ></div>
-
-
-    <!-- PARTICIPANT INFO -->
-
-    <div
-      id="participant"
-      class="participant"
-    >
-
-      <h2>
-        Participant Information
-      </h2>
-
-      <p>
-        <strong>Name:</strong>
-        <span id="participantName"></span>
-      </p>
-
-      <p>
-        <strong>Student Number:</strong>
-        <span id="participantNumber"></span>
-      </p>
-
-      <p>
-        <strong>Program:</strong>
-        <span id="participantProgram"></span>
-      </p>
-
-      <p>
-        <strong>Year Level:</strong>
-        <span id="participantYear"></span>
-      </p>
-
-      <p>
-        <strong>Time In:</strong>
-        <span id="participantTime"></span>
-      </p>
+      </div>
 
     </div>
 
 
-    <!-- RETRY -->
-
-    <button
-      id="retryButton"
-      class="retry"
-      onclick="restartScanner()"
-    >
-      🔄 Restart Scanner
-    </button>
+    <div class="content">
 
 
-    <!-- MANUAL ENTRY -->
+      <!-- =================================================
+           SCANNER HEADING
+           ================================================= -->
 
-    <div class="manual">
+      <div class="scanner-heading">
 
-      <h2>
-        ⌨️ Manual Entry
-      </h2>
+        <h1>
+          Attendance Scanner
+        </h1>
 
-      <p>
-        If the QR code cannot be scanned,
-        enter the Registration ID manually.
-      </p>
+        <p>
+          Scan the participant's registration QR code
+          to record attendance.
+        </p>
+
+      </div>
 
 
-      <input
-        id="manualID"
-        type="text"
-        placeholder="Example: ECE-0001"
-        autocomplete="off"
+      <!-- =================================================
+           CONNECTION STATUS
+           ================================================= -->
+
+      <div
+        id="connectionStatus"
+        class="connection"
       >
 
+        <span
+          class="connection-dot"
+        ></span>
+
+        <span id="connectionText">
+          Connecting to attendance system...
+        </span>
+
+      </div>
+
+
+      <!-- =================================================
+           CAMERA SCANNER
+           ================================================= -->
+
+      <div class="scanner-wrapper">
+
+        <div id="reader"></div>
+
+      </div>
+
+
+      <p class="scan-hint">
+        <strong>Scanning tip:</strong>
+        Keep the QR code inside the camera frame
+        and hold it steady.
+      </p>
+
+
+      <!-- =================================================
+           STATUS
+           ================================================= -->
+
+      <div
+        id="status"
+        class="status"
+      ></div>
+
+
+      <!-- =================================================
+           PARTICIPANT INFORMATION
+           ================================================= -->
+
+      <div
+        id="participant"
+        class="participant"
+      >
+
+        <div class="participant-header">
+
+          <h2>
+            Participant Information
+          </h2>
+
+          <span class="verified">
+            Recorded
+          </span>
+
+        </div>
+
+
+        <div class="participant-grid">
+
+
+          <div class="info-item full">
+
+            <span class="info-label">
+              Full Name
+            </span>
+
+            <span
+              id="participantName"
+              class="info-value"
+            ></span>
+
+          </div>
+
+
+          <div class="info-item">
+
+            <span class="info-label">
+              Registration ID
+            </span>
+
+            <span
+              id="participantRegistration"
+              class="info-value"
+            ></span>
+
+          </div>
+
+
+          <div class="info-item">
+
+            <span class="info-label">
+              Student Number
+            </span>
+
+            <span
+              id="participantNumber"
+              class="info-value"
+            ></span>
+
+          </div>
+
+
+          <div class="info-item">
+
+            <span class="info-label">
+              Program
+            </span>
+
+            <span
+              id="participantProgram"
+              class="info-value"
+            ></span>
+
+          </div>
+
+
+          <div class="info-item">
+
+            <span class="info-label">
+              Year Level
+            </span>
+
+            <span
+              id="participantYear"
+              class="info-value"
+            ></span>
+
+          </div>
+
+
+          <div class="info-item full">
+
+            <span class="info-label">
+              Time In
+            </span>
+
+            <span
+              id="participantTime"
+              class="info-value"
+            ></span>
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           RETRY
+           ================================================= -->
 
       <button
-        onclick="manualCheckIn()"
+        id="retryButton"
+        class="retry"
+        onclick="restartScanner()"
       >
-        CHECK IN
+        Restart Scanner
       </button>
 
+
+      <!-- =================================================
+           MANUAL ENTRY
+           ================================================= -->
+
+      <div class="manual">
+
+        <h2 class="manual-title">
+          Manual Registration ID
+        </h2>
+
+        <p class="manual-description">
+          If the QR code cannot be scanned,
+          enter the participant's Registration ID below.
+        </p>
+
+
+        <div class="input-wrapper">
+
+          <input
+            id="manualID"
+            type="text"
+            placeholder="Example: ECE-0001"
+            autocomplete="off"
+            autocapitalize="characters"
+            spellcheck="false"
+          >
+
+        </div>
+
+
+        <button
+          onclick="manualCheckIn()"
+        >
+          CHECK IN
+        </button>
+
+      </div>
+
+
+      <!-- =================================================
+           FOOTER
+           ================================================= -->
+
+      <div class="footer">
+
+        <strong>
+          College of Engineering
+        </strong>
+
+        <br>
+
+        2026 General Assembly Attendance System
+
+      </div>
+
+
     </div>
-
-
-    <div
-      id="connectionStatus"
-      class="connection"
-    >
-      Connecting to attendance system...
-    </div>
-
 
   </div>
 
@@ -472,6 +1446,10 @@ function testBackend() {
     Date.now();
 
 
+  const script =
+    document.createElement("script");
+
+
   window[callbackName] =
     function(response) {
 
@@ -481,24 +1459,36 @@ function testBackend() {
         );
 
 
+      const connectionText =
+        document.getElementById(
+          "connectionText"
+        );
+
+
+      const connectionDot =
+        connectionStatus.querySelector(
+          ".connection-dot"
+        );
+
+
       if (
         response &&
         response.success
       ) {
 
-        connectionStatus.innerHTML =
-          "🟢 Attendance system connected";
+        connectionText.textContent =
+          "Attendance system connected";
 
-        connectionStatus.style.color =
-          "green";
+        connectionStatus.className =
+          "connection connected";
 
       } else {
 
-        connectionStatus.innerHTML =
-          "🔴 Attendance system responded with an error";
+        connectionText.textContent =
+          "Attendance system responded with an error";
 
-        connectionStatus.style.color =
-          "red";
+        connectionStatus.className =
+          "connection disconnected";
       }
 
 
@@ -507,10 +1497,6 @@ function testBackend() {
         callbackName
       );
     };
-
-
-  const script =
-    document.createElement("script");
 
 
   script.src =
@@ -528,11 +1514,20 @@ function testBackend() {
           "connectionStatus"
         );
 
-      connectionStatus.innerHTML =
-        "🔴 Cannot connect to attendance system";
 
-      connectionStatus.style.color =
-        "red";
+      const connectionText =
+        document.getElementById(
+          "connectionText"
+        );
+
+
+      connectionText.textContent =
+        "Cannot connect to attendance system";
+
+
+      connectionStatus.className =
+        "connection disconnected";
+
 
       cleanupJSONP(
         script,
@@ -593,6 +1588,7 @@ async function startScanner() {
       const label =
         (camera.label || "")
           .toLowerCase();
+
 
       if (
         label.includes("back") ||
@@ -758,7 +1754,7 @@ function checkAttendance(
 
 
   showStatus(
-    "⏳ Checking attendance...",
+    "Checking attendance...",
     "warning"
   );
 
@@ -825,7 +1821,7 @@ function checkAttendance(
 
 
       showStatus(
-        "❌ Could not connect to the attendance system.",
+        "Could not connect to the attendance system.",
         "error"
       );
 
@@ -860,7 +1856,7 @@ function handleAttendanceResponse(
   if (!response) {
 
     showStatus(
-      "❌ No response from attendance system.",
+      "No response from attendance system.",
       "error"
     );
 
@@ -884,7 +1880,7 @@ function handleAttendanceResponse(
 
 
     showStatus(
-      "✅ Attendance successfully recorded!",
+      "Attendance successfully recorded.",
       "success"
     );
 
@@ -911,11 +1907,8 @@ function handleAttendanceResponse(
 
 
     showStatus(
-      "⚠️ " +
-      (
-        response.message ||
-        "This participant is already marked present."
-      ),
+      response.message ||
+      "This participant is already marked present.",
       "warning"
     );
 
@@ -937,7 +1930,7 @@ function handleAttendanceResponse(
   ) {
 
     showStatus(
-      "❌ Registration ID not found: " +
+      "Registration ID not found: " +
       response.registrationID,
       "error"
     );
@@ -954,11 +1947,8 @@ function handleAttendanceResponse(
    *************************************************/
 
   showStatus(
-    "❌ " +
-    (
-      response.message ||
-      "An error occurred."
-    ),
+    response.message ||
+    "An error occurred.",
     "error"
   );
 
@@ -1014,6 +2004,43 @@ function manualCheckIn() {
 
 
 /*************************************************
+ * ENTER KEY FOR MANUAL ENTRY
+ *************************************************/
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function() {
+
+    const input =
+      document.getElementById(
+        "manualID"
+      );
+
+
+    if (input) {
+
+      input.addEventListener(
+        "keydown",
+        function(event) {
+
+          if (
+            event.key === "Enter"
+          ) {
+
+            manualCheckIn();
+
+          }
+
+        }
+      );
+
+    }
+
+  }
+);
+
+
+/*************************************************
  * SHOW PARTICIPANT
  *************************************************/
 
@@ -1031,6 +2058,12 @@ function showParticipant(
     "participantName"
   ).textContent =
     response.name || "—";
+
+
+  document.getElementById(
+    "participantRegistration"
+  ).textContent =
+    response.registrationID || "—";
 
 
   document.getElementById(
@@ -1108,7 +2141,7 @@ function hideStatus() {
 
 
 /*************************************************
- * RESTART SCANNER
+ * RESTART SCANNER AFTER DELAY
  *************************************************/
 
 function restartScannerAfterDelay(
@@ -1204,7 +2237,9 @@ function cleanupJSONP(
   try {
 
     if (script) {
+
       script.remove();
+
     }
 
   } catch (error) {
@@ -1228,17 +2263,8 @@ function cleanupJSONP(
 }
 
 
-/*************************************************
- * SECURITY / DISPLAY HELPER
- *
- * We use textContent for participant information,
- * so HTML injection is avoided.
- *************************************************/
-
-
 </script>
 
 </body>
 
 </html>
-```
