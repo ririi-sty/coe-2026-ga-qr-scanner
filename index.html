@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>College of Engineering Attendance Scanner</title>
+
+
+  <!-- QR SCANNER LIBRARY -->
+  <script src="https://unpkg.com/html5-qrcode"></script>
+
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+
+      margin: 0;
+
+      min-height: 100vh;
+
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+      background:
+        #f3f3f3;
+
+      display: flex;
+
+      justify-content: center;
+
+      align-items: flex-start;
+
+      padding: 25px 15px;
+    }
+
+
+    .container {
+
+      width: 100%;
+
+      max-width: 600px;
+
+      background: white;
+
+      border-radius: 25px;
+
+      padding: 30px 25px;
+
+      box-shadow:
+        0 10px 30px
+        rgba(0,0,0,0.12);
+    }
+
+
+    .header {
+
+      text-align: center;
+
+      margin-bottom: 25px;
+    }
+
+
+    .header h1 {
+
+      margin: 0;
+
+      font-size: 32px;
+
+      color: #111;
+    }
+
+
+    .header p {
+
+      margin-top: 10px;
+
+      font-size: 17px;
+
+      color: #666;
+    }
+
+
+    #reader {
+
+      width: 100%;
+
+      max-width: 500px;
+
+      margin: 0 auto;
+
+      border-radius: 15px;
+
+      overflow: hidden;
+    }
+
+
+    .status {
+
+      margin-top: 20px;
+
+      padding: 18px;
+
+      border-radius: 15px;
+
+      text-align: center;
+
+      font-size: 17px;
+
+      font-weight: bold;
+
+      display: none;
+    }
+
+
+    .status.success {
+
+      display: block;
+
+      background: #dff6e5;
+
+      color: #146c2e;
+    }
+
+
+    .status.error {
+
+      display: block;
+
+      background: #ffe0e0;
+
+      color: #a40000;
+    }
+
+
+    .status.warning {
+
+      display: block;
+
+      background: #fff1cc;
+
+      color: #805b00;
+    }
+
+
+    .participant {
+
+      margin-top: 15px;
+
+      padding: 20px;
+
+      background: #f7f7f7;
+
+      border-radius: 15px;
+
+      display: none;
+    }
+
+
+    .participant h2 {
+
+      margin-top: 0;
+
+      font-size: 22px;
+    }
+
+
+    .participant p {
+
+      margin: 8px 0;
+
+      font-size: 16px;
+    }
+
+
+    .manual {
+
+      margin-top: 30px;
+
+      padding-top: 25px;
+
+      border-top:
+        1px solid #ddd;
+
+      text-align: center;
+    }
+
+
+    .manual h2 {
+
+      margin-bottom: 10px;
+    }
+
+
+    .manual p {
+
+      color: #666;
+
+      margin-bottom: 15px;
+    }
+
+
+    input {
+
+      width: 100%;
+
+      padding: 16px;
+
+      font-size: 18px;
+
+      border:
+        1px solid #ccc;
+
+      border-radius: 12px;
+
+      text-align: center;
+
+      text-transform: uppercase;
+
+      outline: none;
+    }
+
+
+    input:focus {
+
+      border-color: #555;
+    }
+
+
+    button {
+
+      width: 100%;
+
+      margin-top: 12px;
+
+      padding: 16px;
+
+      border: none;
+
+      border-radius: 12px;
+
+      background: #222;
+
+      color: white;
+
+      font-size: 18px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+
+
+    button:active {
+
+      transform: scale(0.98);
+    }
+
+
+    .retry {
+
+      display: none;
+
+      background: #555;
+    }
+
+
+    .connection {
+
+      margin-top: 20px;
+
+      text-align: center;
+
+      font-size: 13px;
+
+      color: #888;
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <div class="container">
+
+
+    <div class="header">
+
+      <h1>
+        📱 Attendance Scanner
+      </h1>
+
+      <p>
+        College of Engineering
+      </p>
+
+      <p>
+        Point the camera at the participant's QR code.
+      </p>
+
+    </div>
+
+
+    <!-- CAMERA SCANNER -->
+
+    <div id="reader"></div>
+
+
+    <!-- STATUS -->
+
+    <div
+      id="status"
+      class="status"
+    ></div>
+
+
+    <!-- PARTICIPANT INFO -->
+
+    <div
+      id="participant"
+      class="participant"
+    >
+
+      <h2>
+        Participant Information
+      </h2>
+
+      <p>
+        <strong>Name:</strong>
+        <span id="participantName"></span>
+      </p>
+
+      <p>
+        <strong>Student Number:</strong>
+        <span id="participantNumber"></span>
+      </p>
+
+      <p>
+        <strong>Program:</strong>
+        <span id="participantProgram"></span>
+      </p>
+
+      <p>
+        <strong>Year Level:</strong>
+        <span id="participantYear"></span>
+      </p>
+
+      <p>
+        <strong>Time In:</strong>
+        <span id="participantTime"></span>
+      </p>
+
+    </div>
+
+
+    <!-- RETRY -->
+
+    <button
+      id="retryButton"
+      class="retry"
+      onclick="restartScanner()"
+    >
+      🔄 Restart Scanner
+    </button>
+
+
+    <!-- MANUAL ENTRY -->
+
+    <div class="manual">
+
+      <h2>
+        ⌨️ Manual Entry
+      </h2>
+
+      <p>
+        If the QR code cannot be scanned,
+        enter the Registration ID manually.
+      </p>
+
+
+      <input
+        id="manualID"
+        type="text"
+        placeholder="Example: ECE-0001"
+        autocomplete="off"
+      >
+
+
+      <button
+        onclick="manualCheckIn()"
+      >
+        CHECK IN
+      </button>
+
+    </div>
+
+
+    <div
+      id="connectionStatus"
+      class="connection"
+    >
+      Connecting to attendance system...
+    </div>
+
+
+  </div>
+
+
+<script>
+
+
+/*************************************************
+ * IMPORTANT:
+ * YOUR GOOGLE APPS SCRIPT WEB APP URL
+ *************************************************/
+
+const APPS_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbwfV4wyIjP5sr6cPztHpHwKwkNcRdsW0ZyVufjlTuLx9ZGIUMjG4kHz3oFhihERUlSC/exec";
+
+
+/*************************************************
+ * VARIABLES
+ *************************************************/
+
+let scanner = null;
+
+let scannerRunning = false;
+
+let processingScan = false;
+
+
+/*************************************************
+ * PAGE LOAD
+ *************************************************/
+
+window.addEventListener(
+  "load",
+  function() {
+
+    testBackend();
+
+    startScanner();
+
+  }
+);
+
+
+/*************************************************
+ * TEST APPS SCRIPT CONNECTION
+ *************************************************/
+
+function testBackend() {
+
+  const callbackName =
+    "backendTest_" +
+    Date.now();
+
+
+  window[callbackName] =
+    function(response) {
+
+      const connectionStatus =
+        document.getElementById(
+          "connectionStatus"
+        );
+
+
+      if (
+        response &&
+        response.success
+      ) {
+
+        connectionStatus.innerHTML =
+          "🟢 Attendance system connected";
+
+        connectionStatus.style.color =
+          "green";
+
+      } else {
+
+        connectionStatus.innerHTML =
+          "🔴 Attendance system responded with an error";
+
+        connectionStatus.style.color =
+          "red";
+      }
+
+
+      cleanupJSONP(
+        script,
+        callbackName
+      );
+    };
+
+
+  const script =
+    document.createElement("script");
+
+
+  script.src =
+    APPS_SCRIPT_URL +
+    "?action=ping" +
+    "&callback=" +
+    callbackName;
+
+
+  script.onerror =
+    function() {
+
+      const connectionStatus =
+        document.getElementById(
+          "connectionStatus"
+        );
+
+      connectionStatus.innerHTML =
+        "🔴 Cannot connect to attendance system";
+
+      connectionStatus.style.color =
+        "red";
+
+      cleanupJSONP(
+        script,
+        callbackName
+      );
+    };
+
+
+  document.body.appendChild(script);
+}
+
+
+/*************************************************
+ * START CAMERA
+ *************************************************/
+
+async function startScanner() {
+
+  if (scannerRunning) {
+    return;
+  }
+
+
+  try {
+
+    scanner =
+      new Html5Qrcode("reader");
+
+
+    const cameras =
+      await Html5Qrcode.getCameras();
+
+
+    if (
+      !cameras ||
+      cameras.length === 0
+    ) {
+
+      showStatus(
+        "No camera was found on this device.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    /*************************************************
+     * SELECT REAR CAMERA WHEN AVAILABLE
+     *************************************************/
+
+    let cameraId =
+      cameras[0].id;
+
+
+    for (const camera of cameras) {
+
+      const label =
+        (camera.label || "")
+          .toLowerCase();
+
+      if (
+        label.includes("back") ||
+        label.includes("rear") ||
+        label.includes("environment")
+      ) {
+
+        cameraId =
+          camera.id;
+
+        break;
+      }
+    }
+
+
+    await scanner.start(
+
+      cameraId,
+
+      {
+        fps: 10,
+
+        qrbox: function(
+          viewfinderWidth,
+          viewfinderHeight
+        ) {
+
+          const size =
+            Math.min(
+              viewfinderWidth,
+              viewfinderHeight
+            ) * 0.7;
+
+          return {
+            width: size,
+            height: size
+          };
+
+        }
+
+      },
+
+      onScanSuccess,
+
+      onScanFailure
+
+    );
+
+
+    scannerRunning = true;
+
+    hideStatus();
+
+
+  } catch (error) {
+
+    console.error(
+      "Camera error:",
+      error
+    );
+
+
+    showStatus(
+      "Could not open the camera. Please allow camera access.",
+      "error"
+    );
+  }
+}
+
+
+/*************************************************
+ * QR SCAN FAILURE
+ *************************************************/
+
+function onScanFailure(error) {
+
+  // Ignore normal scanning failures.
+}
+
+
+/*************************************************
+ * QR SCAN SUCCESS
+ *************************************************/
+
+async function onScanSuccess(decodedText) {
+
+  if (processingScan) {
+    return;
+  }
+
+
+  processingScan = true;
+
+
+  const registrationID =
+    String(decodedText || "")
+      .trim()
+      .toUpperCase();
+
+
+  console.log(
+    "QR detected:",
+    registrationID
+  );
+
+
+  /*************************************************
+   * STOP CAMERA WHILE PROCESSING
+   *************************************************/
+
+  try {
+
+    if (
+      scanner &&
+      scannerRunning
+    ) {
+
+      await scanner.stop();
+
+      scannerRunning = false;
+    }
+
+  } catch (error) {
+
+    console.log(
+      "Scanner stop:",
+      error
+    );
+  }
+
+
+  /*************************************************
+   * SEND ID TO APPS SCRIPT
+   *************************************************/
+
+  checkAttendance(
+    registrationID
+  );
+}
+
+
+/*************************************************
+ * CHECK ATTENDANCE
+ *************************************************/
+
+function checkAttendance(
+  registrationID
+) {
+
+  if (!registrationID) {
+
+    showStatus(
+      "Invalid Registration ID.",
+      "error"
+    );
+
+    processingScan = false;
+
+    restartScannerAfterDelay();
+
+    return;
+  }
+
+
+  showStatus(
+    "⏳ Checking attendance...",
+    "warning"
+  );
+
+
+  const callbackName =
+    "attendanceCallback_" +
+    Date.now();
+
+
+  const script =
+    document.createElement("script");
+
+
+  /*************************************************
+   * JSONP CALLBACK
+   *************************************************/
+
+  window[callbackName] =
+    function(response) {
+
+      console.log(
+        "Apps Script response:",
+        response
+      );
+
+
+      handleAttendanceResponse(
+        response
+      );
+
+
+      cleanupJSONP(
+        script,
+        callbackName
+      );
+    };
+
+
+  /*************************************************
+   * REQUEST
+   *************************************************/
+
+  script.src =
+    APPS_SCRIPT_URL +
+    "?action=record" +
+    "&id=" +
+    encodeURIComponent(
+      registrationID
+    ) +
+    "&callback=" +
+    callbackName;
+
+
+  /*************************************************
+   * CONNECTION ERROR
+   *************************************************/
+
+  script.onerror =
+    function() {
+
+      console.error(
+        "Could not connect to Apps Script."
+      );
+
+
+      showStatus(
+        "❌ Could not connect to the attendance system.",
+        "error"
+      );
+
+
+      cleanupJSONP(
+        script,
+        callbackName
+      );
+
+
+      processingScan = false;
+
+      restartScannerAfterDelay();
+    };
+
+
+  document.body.appendChild(script);
+}
+
+
+/*************************************************
+ * HANDLE ATTENDANCE RESPONSE
+ *************************************************/
+
+function handleAttendanceResponse(
+  response
+) {
+
+  processingScan = false;
+
+
+  if (!response) {
+
+    showStatus(
+      "❌ No response from attendance system.",
+      "error"
+    );
+
+    restartScannerAfterDelay();
+
+    return;
+  }
+
+
+  /*************************************************
+   * SUCCESS
+   *************************************************/
+
+  if (
+    response.success === true
+  ) {
+
+    showParticipant(
+      response
+    );
+
+
+    showStatus(
+      "✅ Attendance successfully recorded!",
+      "success"
+    );
+
+
+    restartScannerAfterDelay(
+      3000
+    );
+
+    return;
+  }
+
+
+  /*************************************************
+   * DUPLICATE
+   *************************************************/
+
+  if (
+    response.type === "duplicate"
+  ) {
+
+    showParticipant(
+      response
+    );
+
+
+    showStatus(
+      "⚠️ " +
+      (
+        response.message ||
+        "This participant is already marked present."
+      ),
+      "warning"
+    );
+
+
+    restartScannerAfterDelay(
+      3000
+    );
+
+    return;
+  }
+
+
+  /*************************************************
+   * NOT FOUND
+   *************************************************/
+
+  if (
+    response.type === "not_found"
+  ) {
+
+    showStatus(
+      "❌ Registration ID not found: " +
+      response.registrationID,
+      "error"
+    );
+
+
+    restartScannerAfterDelay();
+
+    return;
+  }
+
+
+  /*************************************************
+   * OTHER ERROR
+   *************************************************/
+
+  showStatus(
+    "❌ " +
+    (
+      response.message ||
+      "An error occurred."
+    ),
+    "error"
+  );
+
+
+  restartScannerAfterDelay();
+}
+
+
+/*************************************************
+ * MANUAL CHECK-IN
+ *************************************************/
+
+function manualCheckIn() {
+
+  if (processingScan) {
+    return;
+  }
+
+
+  const input =
+    document.getElementById(
+      "manualID"
+    );
+
+
+  const registrationID =
+    String(input.value || "")
+      .trim()
+      .toUpperCase();
+
+
+  if (!registrationID) {
+
+    showStatus(
+      "Please enter a Registration ID.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  processingScan = true;
+
+
+  checkAttendance(
+    registrationID
+  );
+
+
+  input.value = "";
+}
+
+
+/*************************************************
+ * SHOW PARTICIPANT
+ *************************************************/
+
+function showParticipant(
+  response
+) {
+
+  const participant =
+    document.getElementById(
+      "participant"
+    );
+
+
+  document.getElementById(
+    "participantName"
+  ).textContent =
+    response.name || "—";
+
+
+  document.getElementById(
+    "participantNumber"
+  ).textContent =
+    response.studentNumber || "—";
+
+
+  document.getElementById(
+    "participantProgram"
+  ).textContent =
+    response.program || "—";
+
+
+  document.getElementById(
+    "participantYear"
+  ).textContent =
+    response.yearLevel || "—";
+
+
+  document.getElementById(
+    "participantTime"
+  ).textContent =
+    response.time || "Already recorded";
+
+
+  participant.style.display =
+    "block";
+}
+
+
+/*************************************************
+ * SHOW STATUS
+ *************************************************/
+
+function showStatus(
+  message,
+  type
+) {
+
+  const status =
+    document.getElementById(
+      "status"
+    );
+
+
+  status.textContent =
+    message;
+
+
+  status.className =
+    "status " + type;
+
+
+  status.style.display =
+    "block";
+}
+
+
+/*************************************************
+ * HIDE STATUS
+ *************************************************/
+
+function hideStatus() {
+
+  const status =
+    document.getElementById(
+      "status"
+    );
+
+
+  status.style.display =
+    "none";
+}
+
+
+/*************************************************
+ * RESTART SCANNER
+ *************************************************/
+
+function restartScannerAfterDelay(
+  delay = 2000
+) {
+
+  setTimeout(
+    function() {
+
+      restartScanner();
+
+    },
+    delay
+  );
+}
+
+
+/*************************************************
+ * RESTART CAMERA
+ *************************************************/
+
+async function restartScanner() {
+
+  processingScan = false;
+
+
+  const participant =
+    document.getElementById(
+      "participant"
+    );
+
+
+  participant.style.display =
+    "none";
+
+
+  const retryButton =
+    document.getElementById(
+      "retryButton"
+    );
+
+
+  retryButton.style.display =
+    "none";
+
+
+  try {
+
+    if (
+      scanner &&
+      scannerRunning
+    ) {
+
+      await scanner.stop();
+
+      scannerRunning = false;
+    }
+
+  } catch (error) {
+
+    console.log(
+      "Stop scanner:",
+      error
+    );
+  }
+
+
+  await new Promise(
+    function(resolve) {
+
+      setTimeout(
+        resolve,
+        500
+      );
+
+    }
+  );
+
+
+  startScanner();
+}
+
+
+/*************************************************
+ * CLEAN JSONP SCRIPT
+ *************************************************/
+
+function cleanupJSONP(
+  script,
+  callbackName
+) {
+
+  try {
+
+    if (script) {
+      script.remove();
+    }
+
+  } catch (error) {
+
+    console.log(
+      "Script cleanup error:",
+      error
+    );
+  }
+
+
+  try {
+
+    delete window[callbackName];
+
+  } catch (error) {
+
+    window[callbackName] =
+      undefined;
+  }
+}
+
+
+/*************************************************
+ * SECURITY / DISPLAY HELPER
+ *
+ * We use textContent for participant information,
+ * so HTML injection is avoided.
+ *************************************************/
+
+
+</script>
+
+</body>
+
+</html>
