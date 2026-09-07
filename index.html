@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -510,11 +511,20 @@
         let processingScan = false;
 
 
-        const statusBox = document.getElementById("status");
-        const connectionBox = document.getElementById("connection");
-        const connectionText = document.getElementById("connectionText");
-        const participantBox = document.getElementById("participant");
-        const retryBtn = document.getElementById("retryBtn");
+        const statusBox =
+            document.getElementById("status");
+
+        const connectionBox =
+            document.getElementById("connection");
+
+        const connectionText =
+            document.getElementById("connectionText");
+
+        const participantBox =
+            document.getElementById("participant");
+
+        const retryBtn =
+            document.getElementById("retryBtn");
 
 
         /* =====================================================
@@ -541,59 +551,129 @@
             const callbackName =
                 "backendCallback_" + Date.now();
 
-            window[callbackName] = function(response) {
+            const script =
+                document.createElement("script");
 
-                try {
+            let completed = false;
 
-                    if (response && response.success) {
 
-                        connectionBox.classList.add("success");
+            window[callbackName] =
+                function(response) {
+
+                    if (completed) {
+                        return;
+                    }
+
+                    completed = true;
+
+
+                    console.log(
+                        "Backend ping response:",
+                        response
+                    );
+
+
+                    if (
+                        response &&
+                        response.success === true
+                    ) {
+
+                        connectionBox.classList.add(
+                            "success"
+                        );
 
                         connectionText.textContent =
                             "Attendance system connected";
 
                     } else {
 
-                        connectionBox.classList.add("error");
+                        connectionBox.classList.add(
+                            "error"
+                        );
 
                         connectionText.textContent =
                             "Attendance system connection failed";
 
                     }
 
-                } catch (error) {
 
-                    connectionBox.classList.add("error");
+                    cleanupJSONP(
+                        callbackName
+                    );
+
+                };
+
+
+            script.onerror =
+                function() {
+
+                    if (completed) {
+                        return;
+                    }
+
+                    completed = true;
+
+
+                    console.error(
+                        "Backend ping failed."
+                    );
+
+
+                    connectionBox.classList.add(
+                        "error"
+                    );
 
                     connectionText.textContent =
-                        "Attendance system connection failed";
-
-                }
-
-                cleanupJSONP(callbackName);
-
-            };
+                        "Unable to connect to attendance system";
 
 
-            const script = document.createElement("script");
+                    cleanupJSONP(
+                        callbackName
+                    );
+
+                };
+
 
             script.src =
                 APPS_SCRIPT_URL +
-                "?action=ping&callback=" +
-                callbackName;
+                "?action=ping" +
+                "&callback=" +
+                callbackName +
+                "&t=" +
+                Date.now();
 
-            script.onerror = function() {
 
-                connectionBox.classList.add("error");
+            document.body.appendChild(
+                script
+            );
+
+
+            /*
+             * Safety timeout
+             */
+
+            setTimeout(function() {
+
+                if (completed) {
+                    return;
+                }
+
+                completed = true;
+
+
+                connectionBox.classList.add(
+                    "error"
+                );
 
                 connectionText.textContent =
-                    "Unable to connect to attendance system";
+                    "Attendance system connection timed out";
 
-                cleanupJSONP(callbackName);
 
-            };
+                cleanupJSONP(
+                    callbackName
+                );
 
-            document.body.appendChild(script);
+            }, 10000);
 
         }
 
@@ -611,16 +691,23 @@
             statusBox.textContent =
                 "Starting camera...";
 
-            retryBtn.style.display = "none";
+            retryBtn.style.display =
+                "none";
 
-            participantBox.classList.remove("show");
+            participantBox.classList.remove(
+                "show"
+            );
 
 
             /* Check if QR library loaded */
 
-            if (typeof Html5Qrcode === "undefined") {
+            if (
+                typeof Html5Qrcode ===
+                "undefined"
+            ) {
 
-                statusBox.className = "error";
+                statusBox.className =
+                    "error";
 
                 statusBox.textContent =
                     "QR scanner library failed to load. Please refresh the page.";
@@ -635,7 +722,10 @@
 
             try {
 
-                if (scannerRunning && scanner) {
+                if (
+                    scannerRunning &&
+                    scanner
+                ) {
 
                     return;
 
@@ -643,14 +733,19 @@
 
 
                 scanner =
-                    new Html5Qrcode("reader");
+                    new Html5Qrcode(
+                        "reader"
+                    );
 
 
                 const cameras =
                     await Html5Qrcode.getCameras();
 
 
-                if (!cameras || cameras.length === 0) {
+                if (
+                    !cameras ||
+                    cameras.length === 0
+                ) {
 
                     throw new Error(
                         "No camera was detected."
@@ -659,25 +754,33 @@
                 }
 
 
-                /* Try to find rear camera */
+                /*
+                 * Try to find rear camera
+                 */
 
                 let cameraId =
                     cameras[0].id;
 
 
                 const rearCamera =
-                    cameras.find(camera => {
+                    cameras.find(
+                        function(camera) {
 
-                        const label =
-                            (camera.label || "").toLowerCase();
+                            const label =
+                                (
+                                    camera.label ||
+                                    ""
+                                ).toLowerCase();
 
-                        return (
-                            label.includes("back") ||
-                            label.includes("rear") ||
-                            label.includes("environment")
-                        );
 
-                    });
+                            return (
+                                label.includes("back") ||
+                                label.includes("rear") ||
+                                label.includes("environment")
+                            );
+
+                        }
+                    );
 
 
                 if (rearCamera) {
@@ -695,32 +798,36 @@
                     {
                         fps: 10,
 
-                        qrbox: function(
-                            viewfinderWidth,
-                            viewfinderHeight
-                        ) {
+                        qrbox:
+                            function(
+                                viewfinderWidth,
+                                viewfinderHeight
+                            ) {
 
-                            const minEdge =
-                                Math.min(
-                                    viewfinderWidth,
-                                    viewfinderHeight
-                                );
+                                const minEdge =
+                                    Math.min(
+                                        viewfinderWidth,
+                                        viewfinderHeight
+                                    );
 
-                            const size =
-                                Math.floor(
-                                    minEdge * 0.70
-                                );
 
-                            return {
-                                width: size,
-                                height: size
-                            };
+                                const size =
+                                    Math.floor(
+                                        minEdge * 0.70
+                                    );
 
-                        },
+
+                                return {
+                                    width: size,
+                                    height: size
+                                };
+
+                            },
 
                         aspectRatio: 1.0,
 
-                        rememberLastUsedCamera: true
+                        rememberLastUsedCamera:
+                            true
 
                     },
 
@@ -731,10 +838,12 @@
                 );
 
 
-                scannerRunning = true;
+                scannerRunning =
+                    true;
 
 
-                statusBox.className = "";
+                statusBox.className =
+                    "";
 
                 statusBox.textContent =
                     "Camera ready — scan a QR code";
@@ -748,15 +857,18 @@
                 );
 
 
-                scannerRunning = false;
+                scannerRunning =
+                    false;
 
 
-                statusBox.className = "error";
+                statusBox.className =
+                    "error";
 
 
                 if (
                     error &&
-                    error.name === "NotAllowedError"
+                    error.name ===
+                    "NotAllowedError"
                 ) {
 
                     statusBox.textContent =
@@ -764,7 +876,8 @@
 
                 } else if (
                     error &&
-                    error.name === "NotReadableError"
+                    error.name ===
+                    "NotReadableError"
                 ) {
 
                     statusBox.textContent =
@@ -790,14 +903,21 @@
            QR SCAN SUCCESS
         ===================================================== */
 
-        async function onScanSuccess(decodedText) {
+        async function onScanSuccess(
+            decodedText
+        ) {
 
-            if (processingScan) {
+            if (
+                processingScan
+            ) {
+
                 return;
+
             }
 
 
-            processingScan = true;
+            processingScan =
+                true;
 
 
             const registrationID =
@@ -814,11 +934,15 @@
 
             try {
 
-                if (scanner && scannerRunning) {
+                if (
+                    scanner &&
+                    scannerRunning
+                ) {
 
                     await scanner.stop();
 
-                    scannerRunning = false;
+                    scannerRunning =
+                        false;
 
                 }
 
@@ -832,7 +956,8 @@
             }
 
 
-            statusBox.className = "";
+            statusBox.className =
+                "";
 
             statusBox.textContent =
                 "Checking attendance...";
@@ -849,7 +974,9 @@
            QR SCAN FAILURE
         ===================================================== */
 
-        function onScanFailure(errorMessage) {
+        function onScanFailure(
+            errorMessage
+        ) {
 
             /*
              * Intentionally empty.
@@ -875,9 +1002,18 @@
                     "Please enter a valid Registration ID."
                 );
 
+                processingScan =
+                    false;
+
                 return;
 
             }
+
+
+            console.log(
+                "Checking attendance for:",
+                registrationID
+            );
 
 
             const callbackName =
@@ -885,8 +1021,35 @@
                 Date.now();
 
 
+            const script =
+                document.createElement("script");
+
+
+            let completed =
+                false;
+
+
+            /*
+             * JSONP CALLBACK
+             */
+
             window[callbackName] =
                 function(response) {
+
+                    if (completed) {
+                        return;
+                    }
+
+
+                    completed =
+                        true;
+
+
+                    console.log(
+                        "Attendance response:",
+                        response
+                    );
+
 
                     try {
 
@@ -901,9 +1064,14 @@
                             error
                         );
 
+
                         showError(
                             "Unable to process attendance response."
                         );
+
+
+                        retryBtn.style.display =
+                            "block";
 
                     }
 
@@ -915,36 +1083,119 @@
                 };
 
 
-            const script =
-                document.createElement("script");
+            /*
+             * SCRIPT ERROR
+             */
+
+            script.onerror =
+                function() {
+
+                    if (completed) {
+                        return;
+                    }
 
 
-            script.src =
+                    completed =
+                        true;
+
+
+                    console.error(
+                        "Attendance JSONP request failed."
+                    );
+
+
+                    showError(
+                        "Unable to connect to attendance system."
+                    );
+
+
+                    retryBtn.style.display =
+                        "block";
+
+
+                    cleanupJSONP(
+                        callbackName
+                    );
+
+                };
+
+
+            /*
+             * Build JSONP request
+             *
+             * IMPORTANT:
+             * Your Apps Script expects:
+             *
+             * action=record
+             * id=ECE-0001
+             * callback=callbackName
+             */
+
+            const requestURL =
                 APPS_SCRIPT_URL +
-                "?action=record&id=" +
+                "?action=record" +
+                "&id=" +
                 encodeURIComponent(
                     registrationID
                 ) +
                 "&callback=" +
-                callbackName;
-
-
-            script.onerror = function() {
-
-                showError(
-                    "Unable to connect to attendance system."
-                );
-
-                cleanupJSONP(
+                encodeURIComponent(
                     callbackName
-                );
+                ) +
+                "&t=" +
+                Date.now();
 
-            };
+
+            console.log(
+                "Attendance request URL:",
+                requestURL
+            );
+
+
+            script.src =
+                requestURL;
 
 
             document.body.appendChild(
                 script
             );
+
+
+            /*
+             * 10-second timeout
+             */
+
+            setTimeout(function() {
+
+                if (completed) {
+                    return;
+                }
+
+
+                completed =
+                    true;
+
+
+                console.error(
+                    "Attendance request timed out."
+                );
+
+
+                showError(
+                    "Attendance request timed out. Please try again."
+                );
+
+
+                retryBtn.style.display =
+                    "block";
+
+
+                cleanupJSONP(
+                    callbackName
+                );
+
+
+            }, 10000);
 
         }
 
@@ -958,7 +1209,7 @@
         ) {
 
             console.log(
-                "Attendance response:",
+                "Handling attendance response:",
                 response
             );
 
@@ -969,12 +1220,23 @@
                     "No response received from attendance system."
                 );
 
+
+                retryBtn.style.display =
+                    "block";
+
+
                 return;
 
             }
 
 
-            if (response.success) {
+            /* ================================================
+               SUCCESS
+            ================================================= */
+
+            if (
+                response.success === true
+            ) {
 
                 showParticipant(
                     response
@@ -998,7 +1260,20 @@
             }
 
 
-            if (response.status === "duplicate") {
+            /* ================================================
+               DUPLICATE / ALREADY PRESENT
+
+               Apps Script returns:
+
+               type: "duplicate"
+
+               We also keep status support just in case.
+            ================================================= */
+
+            if (
+                response.type === "duplicate" ||
+                response.status === "duplicate"
+            ) {
 
                 showParticipant(
                     response
@@ -1010,6 +1285,7 @@
 
 
                 statusBox.textContent =
+                    response.message ||
                     "This participant has already been marked present.";
 
 
@@ -1022,9 +1298,21 @@
             }
 
 
-            if (response.status === "not_found") {
+            /* ================================================
+               NOT FOUND
+
+               Apps Script returns:
+
+               type: "not_found"
+            ================================================= */
+
+            if (
+                response.type === "not_found" ||
+                response.status === "not_found"
+            ) {
 
                 showError(
+                    response.message ||
                     "Registration ID not found."
                 );
 
@@ -1037,6 +1325,10 @@
 
             }
 
+
+            /* ================================================
+               OTHER BACKEND ERROR
+            ================================================= */
 
             showError(
                 response.message ||
@@ -1093,15 +1385,45 @@
                 "—";
 
 
+            /*
+             * Attendance display
+             */
+
+            let attendanceText =
+                response.attendance;
+
+
+            if (!attendanceText) {
+
+                if (
+                    response.success === true
+                ) {
+
+                    attendanceText =
+                        "Present";
+
+                } else if (
+                    response.type === "duplicate" ||
+                    response.status === "duplicate"
+                ) {
+
+                    attendanceText =
+                        "Already Present";
+
+                } else {
+
+                    attendanceText =
+                        "—";
+
+                }
+
+            }
+
+
             document.getElementById(
                 "participantAttendance"
             ).textContent =
-                response.attendance ||
-                (
-                    response.success
-                        ? "Present"
-                        : "Already Present"
-                );
+                attendanceText;
 
         }
 
@@ -1130,12 +1452,24 @@
                     "Please enter a Registration ID."
                 );
 
+
                 input.focus();
+
 
                 return;
 
             }
 
+
+            console.log(
+                "Manual check-in:",
+                registrationID
+            );
+
+
+            /*
+             * Stop scanner if running
+             */
 
             if (
                 scannerRunning &&
@@ -1149,15 +1483,24 @@
                             false;
 
                     })
-                    .catch(function() {});
+                    .catch(function(error) {
+
+                        console.error(
+                            "Scanner stop error:",
+                            error
+                        );
+
+                    });
 
             }
 
 
-            processingScan = true;
+            processingScan =
+                true;
 
 
-            statusBox.className = "";
+            statusBox.className =
+                "";
 
             statusBox.textContent =
                 "Checking attendance...";
@@ -1181,18 +1524,34 @@
 
         async function restartScanner() {
 
-            processingScan = false;
+            console.log(
+                "Restarting scanner..."
+            );
+
+
+            processingScan =
+                false;
+
 
             participantBox.classList.remove(
                 "show"
             );
 
+
             retryBtn.style.display =
                 "none";
+
 
             document.getElementById(
                 "manualID"
             ).value = "";
+
+
+            statusBox.className =
+                "";
+
+            statusBox.textContent =
+                "Starting camera...";
 
 
             if (scanner) {
@@ -1208,20 +1567,24 @@
                 } catch (error) {
 
                     console.error(
+                        "Scanner stop error:",
                         error
                     );
 
                 }
 
-                scanner = null;
 
-                scannerRunning = false;
+                scanner =
+                    null;
+
+                scannerRunning =
+                    false;
 
             }
 
 
             /*
-             * Give the camera element a moment to reset
+             * Allow camera element to reset
              */
 
             setTimeout(function() {
@@ -1244,8 +1607,9 @@
             statusBox.className =
                 "error";
 
+
             statusBox.textContent =
-                message;
+                "❌ " + message;
 
         }
 
@@ -1272,6 +1636,10 @@
 
             }
 
+
+            /*
+             * Remove the JSONP script
+             */
 
             const scripts =
                 document.querySelectorAll(
@@ -1324,3 +1692,4 @@
 
 </body>
 </html>
+```
